@@ -11,18 +11,34 @@ public class FPSControl : MonoBehaviour {
     float headangle;
     int mask = 260;//100000100
     public LineRenderer laser;
-   // Use this for initialization
+    bool fire;
+    public AudioSource audioshoot;
+    public ParticleSystem muzzle;
+    public ParticleSystem fragment;
+    public GameObject holePrefab;
+    float timergun = 0;
+    // Use this for initialization
     void Start () {
         weaponstartpos = weapon.transform.localPosition;
         Cursor.lockState = CursorLockMode.Locked;
+        fragment.transform.parent = null;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (Input.GetButton("Fire1") && timergun > 0.05f)
+        {
+            fire = true;
+            timergun = 0;
+        }
+        else
+        {
+            fire = false;
+            timergun += Time.deltaTime;
+        }
+        //fire = Input.GetButton("Fire1");
         Control();
         WeaponControl();
-        
-
     }
     /// <summary>
     /// controle da mira da arma,coice,forca da bala e laser
@@ -35,13 +51,22 @@ public class FPSControl : MonoBehaviour {
         {
             laser.SetPosition(1, weapon.transform.InverseTransformPoint(hit.point));
         }
-
-        if (Input.GetButtonDown("Fire1"))
+        if (fire)
         {
+            GameObject hole = Instantiate(holePrefab, hit.point+ hit.normal*0.01f, Quaternion.LookRotation(-hit.normal));
+            hole.transform.parent = hit.collider.transform;
+            audioshoot.Play();
+            muzzle.Emit(1);
             weapon.transform.localPosition -= Vector3.forward * 0.1f;
-            if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000, ~mask))
+            if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000))
             {
-                hit.collider.gameObject.GetComponent<Rigidbody>().AddForceAtPosition(head.transform.forward * 1000, hit.point);
+                fragment.transform.position = hit.point;
+                fragment.Play();
+                Rigidbody rdb = hit.collider.gameObject.GetComponent<Rigidbody>();
+                if (rdb)
+                {
+                    rdb.AddForceAtPosition(head.transform.forward * 1000, hit.point);
+                }
                
             }
         }
