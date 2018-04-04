@@ -57,6 +57,7 @@ public class FPSControl : MonoBehaviour {
             hole.transform.parent = hit.collider.transform;
             audioshoot.Play();
             muzzle.Emit(1);
+            
             weapon.transform.localPosition -= Vector3.forward * 0.1f;
             if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000))
             {
@@ -65,11 +66,21 @@ public class FPSControl : MonoBehaviour {
                 Rigidbody rdb = hit.collider.gameObject.GetComponent<Rigidbody>();
                 if (rdb)
                 {
+                    KillZombie(hit);
                     rdb.AddForceAtPosition(head.transform.forward * 1000, hit.point);
                 }
                
             }
         }
+    }
+
+    void KillZombie(RaycastHit hit)
+    {
+        if (hit.collider.CompareTag("Zombie"))
+        {
+            hit.collider.gameObject.SendMessageUpwards("KillMe");
+        }
+
     }
 
     void Control()
