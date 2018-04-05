@@ -45,24 +45,18 @@ public class FPSControl : MonoBehaviour {
     /// </summary>
     void WeaponControl()
     {
-        weapon.transform.localPosition = Vector3.Lerp(weapon.transform.localPosition, weaponstartpos, Time.deltaTime * 10);
         RaycastHit hit;
-        if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000))
-        {
-            laser.SetPosition(1, weapon.transform.InverseTransformPoint(hit.point));
-        }
+        Laser(out hit);
+        Recoil();
         if (fire)
         {
-            GameObject hole = Instantiate(holePrefab, hit.point+ hit.normal*0.01f, Quaternion.LookRotation(-hit.normal));
-            hole.transform.parent = hit.collider.transform;
             audioshoot.Play();
             muzzle.Emit(1);
-            
-            weapon.transform.localPosition -= Vector3.forward * 0.1f;
+
             if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000))
             {
-                fragment.transform.position = hit.point;
-                fragment.Play();
+                HoleGenerator(hit);
+                Fragment(hit);
                 Rigidbody rdb = hit.collider.gameObject.GetComponent<Rigidbody>();
                 if (rdb)
                 {
@@ -73,7 +67,32 @@ public class FPSControl : MonoBehaviour {
             }
         }
     }
-
+    void Fragment(RaycastHit hit)
+    {
+        fragment.transform.position = hit.point;
+        fragment.Play();
+    }
+    void Recoil()
+    {
+        weapon.transform.localPosition = 
+            Vector3.Lerp(weapon.transform.localPosition, weaponstartpos, Time.deltaTime * 10);
+        if (fire)
+        {
+            weapon.transform.localPosition -= Vector3.forward * 0.1f;
+        }
+    }
+    void Laser(out RaycastHit hit)
+    {
+        if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 1000))
+        {
+            laser.SetPosition(1, weapon.transform.InverseTransformPoint(hit.point));
+        }
+    }
+    void HoleGenerator(RaycastHit hit)
+    {
+        GameObject hole = Instantiate(holePrefab, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(-hit.normal));
+        hole.transform.parent = hit.collider.transform;
+    }
     void KillZombie(RaycastHit hit)
     {
         if (hit.collider.CompareTag("Zombie"))
@@ -82,7 +101,6 @@ public class FPSControl : MonoBehaviour {
         }
 
     }
-
     void Control()
     {
         movement = new Vector3(Input.GetAxis("Horizontal"), -1, Input.GetAxis("Vertical"));
