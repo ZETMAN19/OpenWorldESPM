@@ -141,7 +141,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4277848521352258}
   - component: {fileID: 33005675659666398}
-  - component: {fileID: 136827056082285058}
   - component: {fileID: 23753232102092724}
   - component: {fileID: 143981846140965538}
   - component: {fileID: 114186855094777390}
@@ -432,7 +431,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4967fc0912201c940a1777518eac484a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e1409bc69872ae6469026a9a46486615, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -540,6 +539,8 @@ MonoBehaviour:
   laser: {fileID: 120958889542072210}
   audioshoot: {fileID: 82341505682622162}
   muzzle: {fileID: 198547885030188384}
+  fragment: {fileID: 198622341048109784}
+  holePrefab: {fileID: 1094199005903410, guid: 25620b73b86f0bf4ea1aacae2d66599b, type: 2}
 --- !u!120 &120958889542072210
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -633,19 +634,6 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1231058437317406}
   m_Enabled: 1
---- !u!136 &136827056082285058
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1730608589732604}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!143 &143981846140965538
 CharacterController:
   m_ObjectHideFlags: 1

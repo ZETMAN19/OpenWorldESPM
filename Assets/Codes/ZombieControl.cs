@@ -36,9 +36,10 @@ public class ZombieControl : MonoBehaviour {
     {
         if (!brain)
         {
-            transform.LookAt(ways[wayindex]);
+            Vector3 dir = ways[wayindex].position - transform.position;
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir),Time.fixedDeltaTime);
             charctrl.SimpleMove(transform.forward);
-            if(Vector3.Distance(transform.position, ways[wayindex].position) < 1)
+            if(dir.magnitude < 1)
             {
                 wayindex++;
                 if (wayindex >= ways.Length) wayindex = 1;
